@@ -18,6 +18,7 @@ class JenkinsClient(Jenkins):
                  password: Optional[str] = None,
                  *,
                  verify: bool = True,
+                 proxies:dict|None = None,
                  timeout: Optional[float] = None,
                  retry: Optional[dict] = None
                  ) -> None:
@@ -36,6 +37,9 @@ class JenkinsClient(Jenkins):
 
             verify (Optional[bool]):
                 Verify SSL (default: true).
+
+            proxies (dict):
+                Use if you are working behind Proxy (default: None).
 
             timeout (Optional[float]):
                 HTTP request timeout.
@@ -102,6 +106,7 @@ class JenkinsClient(Jenkins):
 
         self.timeout = timeout
         self.verify = verify
+        self.proxies = proxies
         self.crumb = None  # type: Any
 
         if not retry:
@@ -144,6 +149,7 @@ class JenkinsClient(Jenkins):
         response = self.session.request(
             method,
             url,
+            proxies=self.proxies,
             verify=self.verify,
             **kwargs
         )
